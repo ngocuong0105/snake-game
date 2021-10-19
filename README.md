@@ -6,5 +6,5 @@
 java -jar --enable-preview snakeGame.jar
 ```
 
-## Game show case
+## Game showcase
 <img src="context/showcase.gif">
