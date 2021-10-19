@@ -10,9 +10,9 @@ import javax.swing.JFrame;
 public class GameFrame extends JFrame {
     //constructor
     GameFrame() {
-        // GamePanel panel = new GamePanel();
-        // this.add(panel);
-        this.add(new GamePanel()); // same as above but shorter
+        GamePanel gamePanel = new GamePanel();
+        gamePanel.setBounds(20, 20, 360, 350);
+        this.add(gamePanel);
         this.setTitle("Snake");// window title
         // closes program when clicking x button
         // without it will close only window but program will be running

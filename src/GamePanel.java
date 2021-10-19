@@ -1,4 +1,4 @@
-import javax.swing.JPanel;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
@@ -13,9 +13,14 @@ public class GamePanel extends JPanel implements ActionListener{
 
     static final int SCREEN_WIDTH = 600;
     static final int SCREEN_HEIGHT = 600;
-    static final int UNIT_SIZE = 25; // measure size of objects, similar to pixel size
+    static final int UNIT_SIZE = 20; // measure size of objects, similar to pixel size
     static final int GAME_UNITS = (SCREEN_WIDTH*SCREEN_HEIGHT)/UNIT_SIZE;
-    static final int DELAY = 74; // snake speed
+    static final int DELAY = 70; // snake speed, the smaller the faster
+
+    static final Color APPLE_COLOR = new Color(255,226,119); 
+    static final Color SNAKE_BODY_COLOR = new Color(56,176,0); 
+    static final Color SNAKE_HEAD_COLOR = Color.green; 
+    static final Color GAME_OVER_COLOR = Color.red; 
     
     // holds x,y coordinates of all body parts of the snake
     final int x[] = new int[GAME_UNITS]; //(x[0],y[0]) is the head of the snake
@@ -28,18 +33,17 @@ public class GamePanel extends JPanel implements ActionListener{
     boolean running = false;
     Timer timer;
     Random random;
-    
+
     // constructor
     GamePanel(){
         random = new Random();
         this.setPreferredSize(new Dimension(SCREEN_WIDTH,SCREEN_HEIGHT));
         this.setBackground(Color.black);
-        this.setFocusable(true);//????
+        this.setFocusable(true);
         this.addKeyListener(new MyKeyAdapter());
         startGame();
 
     }
-
     public void startGame() {
         newApple();
         running = true;
@@ -70,24 +74,24 @@ public class GamePanel extends JPanel implements ActionListener{
             }
             */
             // draw apple
-            g.setColor(Color.red);
+            g.setColor(APPLE_COLOR);
             g.fillOval(appleX,appleY,UNIT_SIZE,UNIT_SIZE);
 
             for(int i = 0; i<bodyParts; i++) {
                 // body
                 if (i==0) {
-                    g.setColor(Color.green);
+                    g.setColor(SNAKE_HEAD_COLOR);
                     g.fillRect(x[i],y[i],UNIT_SIZE, UNIT_SIZE);
                 }
                 // head
                 else {
-                    g.setColor(new Color(45,180,0));
-                    g.setColor(new Color(random.nextInt(255),180,0));
+                    g.setColor(SNAKE_BODY_COLOR);
+                    // g.setColor(new Color(random.nextInt(255),180,0));
                     g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
                 }
             }
-            g.setColor(Color.red);
-            g.setFont(new Font("Ink Free", Font.ITALIC, 40));
+            g.setColor(APPLE_COLOR);
+            g.setFont(new Font("Ink Free", Font.ITALIC, 30));
             FontMetrics metrics = getFontMetrics(g.getFont());
             String text = "Score:" + applesEaten;
             g.drawString(text,(SCREEN_WIDTH - metrics.stringWidth(text))/2 ,g.getFont().getSize());
@@ -172,7 +176,15 @@ public class GamePanel extends JPanel implements ActionListener{
         FontMetrics metricsScore = getFontMetrics(g.getFont());
         String textScore = "Score:" + applesEaten;
         g.drawString(textScore,(SCREEN_WIDTH - metricsScore.stringWidth(textScore))/2 ,g.getFont().getSize());
-    
+        
+    }
+    public void resetGame() {
+        bodyParts = 6;
+        running = true;
+        direction = 'R';
+        x[0] = 0;
+        y[0] = 0;
+        timer.start();
     }
 
     @Override
@@ -211,6 +223,11 @@ public class GamePanel extends JPanel implements ActionListener{
             case KeyEvent.VK_DOWN:
                 if(direction != 'U') {
                     direction = 'D';
+                }
+                break;
+            case KeyEvent.VK_ESCAPE:
+                if (!running) {
+                    resetGame();
                 }
                 break;
             }
