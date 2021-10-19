@@ -7,4 +7,4 @@ java -jar --enable-preview snakeGame.jar
 ```
 
 ## Sneak peek
-<img src="context/sneakpeek.gif">
+<img src="context/showcase.gif">
