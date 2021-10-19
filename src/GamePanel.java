@@ -148,11 +148,11 @@ public class GamePanel extends JPanel implements ActionListener{
         }
 
         // check head touches borders 
-        if ((x[0]<0) || (x[0] > SCREEN_WIDTH)) {
-            x[0] = (x[0]+SCREEN_WIDTH)%SCREEN_WIDTH;
+        if ((x[0]<0) || (x[0] >= SCREEN_WIDTH)) {
+            x[0] = (x[0] + SCREEN_WIDTH) % SCREEN_WIDTH;
         }
-        if ((y[0]<0) || (y[0] > SCREEN_HEIGHT)) {
-            y[0] = (y[0]+SCREEN_HEIGHT)%SCREEN_HEIGHT;
+        if ((y[0]<0) || (y[0] >= SCREEN_HEIGHT)) {
+            y[0] = (y[0] + SCREEN_HEIGHT) % SCREEN_HEIGHT;
         }
         if(!running) {
             timer.stop();
