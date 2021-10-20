@@ -2,20 +2,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
-import javax.swing.Timer;
 
 /**
  * The JPanel is a simplest container class. It provides space in which an application 
  * can attach any other component. It inherits the JComponents class. It doesn't have title bar.
  */
 
-public class GamePanel extends JPanel implements ActionListener{
+public class GamePanel extends JPanel implements Runnable {
 
     static final int SCREEN_WIDTH = 600;
     static final int SCREEN_HEIGHT = 600;
     static final int UNIT_SIZE = 20; // measure size of objects, similar to pixel size
     static final int GAME_UNITS = (SCREEN_WIDTH*SCREEN_HEIGHT)/UNIT_SIZE;
-    static final int DELAY = 70; // snake speed, the smaller the faster
+    static final int FPS = 20; // controls snake speed
 
     static final Color APPLE_COLOR = new Color(255,226,119); 
     static final Color SNAKE_BODY_COLOR = new Color(56,176,0); 
@@ -31,32 +30,26 @@ public class GamePanel extends JPanel implements ActionListener{
     int appleY;
     char direction = 'R'; // initialize snake to go right
     boolean running = false;
-    Timer timer;
     Random random;
+    Thread gameThread;
 
     // constructor
     GamePanel(){
+        running = true;
         random = new Random();
+        newApple();
         this.setPreferredSize(new Dimension(SCREEN_WIDTH,SCREEN_HEIGHT));
         this.setBackground(Color.black);
         this.setFocusable(true);
         this.addKeyListener(new MyKeyAdapter());
         startGame();
-
     }
     public void startGame() {
-        newApple();
         running = true;
-        /**
-         * A javax.swing.Timer object calls an action listener at regular intervals or only once. 
-         * For example, it can be used to show frames of an animation many times per second, 
-         * repaint a clock every second, or check a server every hour. 
-         * Fires one or more ActionEvents (defined inactionPerfomed method) at specified intervals
-         */
-        //
-        timer = new Timer(DELAY,this); //milliseconds, ActionListener
-		timer.start();
-
+        random = new Random();
+        newApple();
+        gameThread = new Thread(this);
+        gameThread.start();
     }
 
     public void paintComponent(Graphics g){
@@ -154,9 +147,7 @@ public class GamePanel extends JPanel implements ActionListener{
         if ((y[0]<0) || (y[0] >= SCREEN_HEIGHT)) {
             y[0] = (y[0] + SCREEN_HEIGHT) % SCREEN_HEIGHT;
         }
-        if(!running) {
-            timer.stop();
-        }
+
     }
 
     public void gameOver(Graphics g) {
@@ -184,21 +175,35 @@ public class GamePanel extends JPanel implements ActionListener{
         direction = 'R';
         x[0] = 0;
         y[0] = 0;
-        timer.start();
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        // method of AtionListener Interface
-        // tasks to be performed by action listener
-        if (running) {
-            move();
+    // Method from Runnable interface
+    public void run() {
+        
+        // simple game loop
+        while (running) {
+            long start = System.nanoTime();
+
+            move(); // calls move method of panel
             checkApple();
             checkCollisions();
+            repaint();
+
+            long stop = System.nanoTime();
+            long elapsed = stop - start;
+            long fps = FPS; // frame rate is the frequency at which consecutive images are captured or displayed. 
+            long targetTime = 1000 / fps; // 1000 miliseconds = 1 second
+            long wait = targetTime - elapsed / 10000000; // convert to milliseconds
+            if (wait > 0) {
+                try {
+                    Thread.sleep(wait); // measured in milliseconds
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        repaint(); // recolor cells (snake is moving)
+
     }
-    
     // subclass which controls snake movement
     public class MyKeyAdapter extends KeyAdapter {
 
