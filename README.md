@@ -2,6 +2,7 @@
 
 
 ## Run game
+You need Java setup (JDK 18.0+) to load the game.
 ```
 java -jar --enable-preview snakeGame.jar
 ```
