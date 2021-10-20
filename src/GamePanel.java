@@ -35,9 +35,6 @@ public class GamePanel extends JPanel implements Runnable {
 
     // constructor
     GamePanel(){
-        running = true;
-        random = new Random();
-        newApple();
         this.setPreferredSize(new Dimension(SCREEN_WIDTH,SCREEN_HEIGHT));
         this.setBackground(Color.black);
         this.setFocusable(true);
@@ -162,12 +159,23 @@ public class GamePanel extends JPanel implements Runnable {
             SCREEN_HEIGHT/2
             );
 
+        // Score txt
         g.setColor(Color.red);
         g.setFont(new Font("Ink Free", Font.ITALIC, 40));
         FontMetrics metricsScore = getFontMetrics(g.getFont());
         String textScore = "Score:" + applesEaten;
         g.drawString(textScore,(SCREEN_WIDTH - metricsScore.stringWidth(textScore))/2 ,g.getFont().getSize());
         
+        // Reset game text
+        g.setColor(Color.white);
+        g.setFont(new Font("Ink Free", Font.ITALIC, 20));
+        FontMetrics metricsReset = getFontMetrics(g.getFont());
+        String textReset = "click ESC to reset";
+        g.drawString(
+            textReset,
+            (SCREEN_WIDTH - metricsReset.stringWidth(textReset))/2,
+            3*SCREEN_HEIGHT/4
+            );
     }
     public void resetGame() {
         bodyParts = 6;
@@ -175,6 +183,7 @@ public class GamePanel extends JPanel implements Runnable {
         direction = 'R';
         x[0] = 0;
         y[0] = 0;
+        startGame();
     }
 
     // Method from Runnable interface
