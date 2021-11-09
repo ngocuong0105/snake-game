@@ -58,6 +58,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         if(running) {
             /*
+            drawing game squares
             for (int i = 0; i<SCREEN_HEIGHT/UNIT_SIZE; i++) {
                 g.drawLine(i*UNIT_SIZE, 0, i*UNIT_SIZE , SCREEN_HEIGHT); // vertical lines in the grid
                 g.drawLine(0, i*UNIT_SIZE, SCREEN_WIDTH, i*UNIT_SIZE); // horizontal lines in the grid
